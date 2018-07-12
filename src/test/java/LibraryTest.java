@@ -5,24 +5,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class LibraryTest {
     private Library library;
     private Book book;
-    private IO io;
+    private IO mockIO;
     private List<Book> initListsOfBooks;
 
     @Before
     public void beforeEach(){
+        book = new Book();
         initListsOfBooks = new ArrayList<>(Arrays.asList(book));
-        library = new Library(initListsOfBooks);
-        io = new IO();
+        mockIO = mock(IO.class);
+        library = new Library(initListsOfBooks, mockIO);
     }
 
     @Test
     public void shouldListAllBookInTheLibrary(){
         library.list();
-        verify(io).display("book information");
+        verify(mockIO).display(book.toString());
     }
 }
