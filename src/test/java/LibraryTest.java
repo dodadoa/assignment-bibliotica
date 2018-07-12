@@ -16,15 +16,16 @@ public class LibraryTest {
 
     @Before
     public void beforeEach(){
-        book = new Book();
+        book = new Book("Book1", "K.", 1994);
         initListsOfBooks = new ArrayList<>(Arrays.asList(book));
         mockIO = mock(IO.class);
         library = new Library(initListsOfBooks, mockIO);
     }
 
     @Test
-    public void shouldListAllBookInTheLibrary(){
+    public void shouldListAlBookInTheLibraryWithInformationOfBook(){
         library.list();
-        verify(mockIO).display(book.toString());
+        verify(mockIO).displayColumn();
+        verify(mockIO).display("Book1 | K. | 1994");
     }
 }

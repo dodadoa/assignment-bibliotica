@@ -11,6 +11,7 @@ public class Library {
     }
 
     public void list() {
-        this.listOfBooks.forEach(book -> this.io.display(book.toString()));
+        io.displayColumn();
+        this.listOfBooks.forEach(book -> this.io.display(book.getInformation()));
     }
 }
