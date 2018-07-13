@@ -30,11 +30,10 @@ public class LibraryTest {
 
     @Test
     public void shouldGetListOfStringOfBookWhichIsAvailableWhenListingBooksFromLibrary() {
-        List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994", "Book2 | K. | 1990"));
-        Book notAvailableBook = new Book("book3", "K.", 1000);
-        notAvailableBook.setAvailability(false);
-
-        initListsOfBooks.add(notAvailableBook);
+        List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994"));
+        book2.setAvailability(false);
+        List<Book> bookLists = new ArrayList<>(Arrays.asList(book1, book2));
+        library = new Library(bookLists);
         assertEquals(booksInformation, library.list());
     }
 
