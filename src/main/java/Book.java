@@ -9,7 +9,7 @@ public class Book {
         this.yearPublished = yearPublished;
     }
 
-    public String getInformation(){
+    public String getInformation() {
         return String.format("%s | %s | %s", this.name, this.author, this.yearPublished);
     }
 }

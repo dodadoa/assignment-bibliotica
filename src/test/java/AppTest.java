@@ -17,7 +17,7 @@ public class AppTest {
     private List<Book> initListsOfBooks;
 
     @Before
-    public void beforeEach(){
+    public void beforeEach() {
         mockIO = mock(IO.class);
         book1 = new Book("Book1", "K.", 1994);
         book2 = new Book("Book2", "K.", 1990);
@@ -27,13 +27,13 @@ public class AppTest {
     }
 
     @Test
-    public void shouldWelcomeUserByGreetingHello(){
+    public void shouldWelcomeUserByGreetingHello() {
         app.greeting();
         verify(mockIO).display("Hello");
     }
 
     @Test
-    public void shouldListAlBookInTheLibraryWithInformationOfBook(){
+    public void shouldListAlBookInTheLibraryWithInformationOfBook() {
         app.printList();
         verify(mockIO).display("name, author, year published");
         verify(mockIO).display("Book1 | K. | 1994");
@@ -41,7 +41,7 @@ public class AppTest {
     }
 
     @Test
-    public void shouldShowMenuAndOptionListBooks(){
+    public void shouldShowMenuAndOptionListBooks() {
         when(mockIO.input()).thenReturn("");
         app.menu();
         verify(mockIO).display("Menu:");
@@ -50,7 +50,7 @@ public class AppTest {
     }
 
     @Test
-    public void shouldPrintListOfBookWhenUserInput1(){
+    public void shouldPrintListOfBookWhenUserInput1() {
         App spyApp = spy(app);
         when(mockIO.input()).thenReturn("list");
         spyApp.menu();
@@ -58,16 +58,17 @@ public class AppTest {
     }
 
     @Test
-    public void shouldShowInvalidOptionMessageWhenInputIsNotlist(){
+    public void shouldShowInvalidOptionMessageWhenInputIsNotlist() {
         when(mockIO.input()).thenReturn("not list, not quit");
         app.menu();
         verify(mockIO).display("Select a valid option!");
     }
 
     @Test
-    public void shouldQuitApplicationWhenUserInputQuit(){
+    public void shouldQuitApplicationWhenUserInputQuit() {
+        App spyApp = spy(app);
         when(mockIO.input()).thenReturn("quit");
-        app.menu();
-        verify(mockIO).quit();
+        spyApp.menu();
+        verify(spyApp).quit();
     }
 }

@@ -14,7 +14,7 @@ public class LibraryTest {
     private List<Book> initListsOfBooks;
 
     @Before
-    public void beforeEach(){
+    public void beforeEach() {
         book1 = new Book("Book1", "K.", 1994);
         book2 = new Book("Book2", "K.", 1990);
         initListsOfBooks = new ArrayList<>(Arrays.asList(book1, book2));
@@ -22,7 +22,7 @@ public class LibraryTest {
     }
 
     @Test
-    public void shouldGetListOfStringOfBookWhenListBooksFromLibrary(){
+    public void shouldGetListOfStringOfBookWhenListingBooksFromLibrary() {
         List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994", "Book2 | K. | 1990"));
         assertEquals(booksInformation, library.list());
     }

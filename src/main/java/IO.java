@@ -5,13 +5,13 @@ public class IO {
         System.out.println(message);
     }
 
-    public String input(){
+    public String input() {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine().trim();
         return input;
     }
 
-    public void quit(){
+    public void quit() {
         System.exit(0);
     }
 }
