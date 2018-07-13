@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class AppTest {
 
@@ -43,8 +42,31 @@ public class AppTest {
 
     @Test
     public void shouldShowMenuAndOptionListBooks(){
+        when(mockIO.input()).thenReturn("");
         app.menu();
         verify(mockIO).display("Menu:");
-        verify(mockIO).display("List Books");
+        verify(mockIO).display("List Books -> press 1 and enter");
+    }
+
+    @Test
+    public void shouldPrintListOfBookWhenUserInput1(){
+        App spyApp = spy(app);
+        when(mockIO.input()).thenReturn("1");
+        spyApp.menu();
+        verify(spyApp).printList();
+    }
+
+    @Test
+    public void shouldShowInvalidOptionMessageWhenInputIsNot1(){
+        when(mockIO.input()).thenReturn("not 1");
+        app.menu();
+        verify(mockIO).display("Select a valid option!");
+    }
+
+    @Test
+    public void shouldQuitApplicationWhenUserInputQuit(){
+        when(mockIO.input()).thenReturn("quit");
+        app.menu();
+        verify(mockIO).quit();
     }
 }
