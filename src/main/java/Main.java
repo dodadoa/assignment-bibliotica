@@ -11,8 +11,7 @@ public class Main {
         Library library = new Library(initListsOfBooks);
 
         App app = new App(io, library);
-        while(true){
-            app.run();
-        }
+        app.run();
+
     }
 }

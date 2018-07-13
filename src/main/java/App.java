@@ -18,19 +18,21 @@ public class App {
 
     public void run(){
         greeting();
-        menu();
+        while(true){
+            menu();
+        }
     }
 
     public void menu() {
         io.display("Menu:");
-        io.display("List Books -> press 1 and enter");
-        io.display("Quit app -> press quit and enter");
+        io.display("List Books -> type list and enter");
+        io.display("Quit app -> type quit and enter");
         String input = io.input();
         if(input.equals("quit")){
             io.quit();
         }
 
-        if(input.equals("1")){
+        if(input.equals("list")){
             this.printList();
         } else {
             io.display("Select a valid option!");

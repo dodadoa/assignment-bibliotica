@@ -45,21 +45,21 @@ public class AppTest {
         when(mockIO.input()).thenReturn("");
         app.menu();
         verify(mockIO).display("Menu:");
-        verify(mockIO).display("List Books -> press 1 and enter");
-        verify(mockIO).display("Quit app -> press quit and enter");
+        verify(mockIO).display("List Books -> type list and enter");
+        verify(mockIO).display("Quit app -> type quit and enter");
     }
 
     @Test
     public void shouldPrintListOfBookWhenUserInput1(){
         App spyApp = spy(app);
-        when(mockIO.input()).thenReturn("1");
+        when(mockIO.input()).thenReturn("list");
         spyApp.menu();
         verify(spyApp).printList();
     }
 
     @Test
-    public void shouldShowInvalidOptionMessageWhenInputIsNot1(){
-        when(mockIO.input()).thenReturn("not 1");
+    public void shouldShowInvalidOptionMessageWhenInputIsNotlist(){
+        when(mockIO.input()).thenReturn("not list, not quit");
         app.menu();
         verify(mockIO).display("Select a valid option!");
     }
