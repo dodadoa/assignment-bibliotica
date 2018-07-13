@@ -24,6 +24,7 @@ public class App {
     public void menu() {
         io.display("Menu:");
         io.display("List Books -> press 1 and enter");
+        io.display("Quit app -> press quit and enter");
         String input = io.input();
         if(input.equals("quit")){
             io.quit();

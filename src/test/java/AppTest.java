@@ -46,6 +46,7 @@ public class AppTest {
         app.menu();
         verify(mockIO).display("Menu:");
         verify(mockIO).display("List Books -> press 1 and enter");
+        verify(mockIO).display("Quit app -> press quit and enter");
     }
 
     @Test
