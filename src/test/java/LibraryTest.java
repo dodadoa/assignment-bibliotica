@@ -5,27 +5,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static junit.framework.TestCase.assertEquals;
 
 public class LibraryTest {
     private Library library;
-    private Book book;
-    private IO mockIO;
+    private Book book1;
+    private Book book2;
     private List<Book> initListsOfBooks;
 
     @Before
     public void beforeEach(){
-        book = new Book("Book1", "K.", 1994);
-        initListsOfBooks = new ArrayList<>(Arrays.asList(book));
-        mockIO = mock(IO.class);
-        library = new Library(initListsOfBooks, mockIO);
+        book1 = new Book("Book1", "K.", 1994);
+        book2 = new Book("Book2", "K.", 1990);
+        initListsOfBooks = new ArrayList<>(Arrays.asList(book1, book2));
+        library = new Library(initListsOfBooks);
     }
 
     @Test
-    public void shouldListAlBookInTheLibraryWithInformationOfBook(){
-        library.list();
-        verify(mockIO).displayColumn();
-        verify(mockIO).display("Book1 | K. | 1994");
+    public void shouldGetListOfStringOfBookWhenListBooksFromLibrary(){
+        List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994", "Book2 | K. | 1990"));
+        assertEquals(booksInformation, library.list());
     }
+
 }

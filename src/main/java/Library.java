@@ -1,17 +1,17 @@
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Library {
 
     private List<Book> listOfBooks;
-    private IO io;
 
-    public Library(List<Book> initListsOfBooks, IO io) {
+    public Library(List<Book> initListsOfBooks) {
         this.listOfBooks = initListsOfBooks;
-        this.io = io;
     }
 
-    public void list() {
-        io.displayColumn();
-        this.listOfBooks.forEach(book -> this.io.display(book.getInformation()));
+    public List<String> list() {
+        return this.listOfBooks.stream()
+                .map(book -> book.getInformation())
+                .collect(Collectors.toList());
     }
 }
