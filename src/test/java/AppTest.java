@@ -1,3 +1,4 @@
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,6 +27,11 @@ public class AppTest {
         app = new App(mockIO, library);
     }
 
+    @After
+    public void afterEach() {
+        reset(mockIO);
+    }
+
     @Test
     public void shouldWelcomeUserByGreetingHello() {
         app.greeting();
@@ -47,6 +53,7 @@ public class AppTest {
         verify(mockIO).display("Menu:");
         verify(mockIO).display("List Books -> type list and enter");
         verify(mockIO).display("Quit app -> type quit and enter");
+        verify(mockIO).display("Checkout book -> type checkout and enter");
     }
 
     @Test
@@ -65,10 +72,40 @@ public class AppTest {
     }
 
     @Test
-    public void shouldQuitApplicationWhenUserInputQuit() {
+    public void shouldQuitApplicationWhenUserInputFromMenuIsQuit() {
         App spyApp = spy(app);
         when(mockIO.input()).thenReturn("quit");
         spyApp.menu();
         verify(spyApp).quit();
+    }
+
+    @Test
+    public void shouldGoToCheckoutMenuWhenInputFromMenuIsCheckout() {
+        App spyApp = spy(app);
+        when(mockIO.input()).thenReturn("checkout");
+        spyApp.menu();
+        verify(spyApp).checkoutMenu();
+    }
+
+    @Test
+    public void shouldDisplaySuccessfulMessageWhenCheckoutTheBookThatExistAndAvailable() {
+        when(mockIO.input()).thenReturn("Book1");
+        app.checkoutMenu();
+        verify(mockIO).display("Thank you! Enjoy the book");
+    }
+
+    @Test
+    public void shouldDisplayFailMessageWhenCheckoutTheBookThatNotExist() {
+        when(mockIO.input()).thenReturn("Book10");
+        app.checkoutMenu();
+        verify(mockIO).display("That book is not available.");
+    }
+
+    @Test
+    public void shouldDisplayFailMessageWhenCheckoutTheBookThatNotAvailable() {
+        when(mockIO.input()).thenReturn("Book1");
+        app.checkoutMenu();
+        app.checkoutMenu();
+        verify(mockIO).display("That book is not available.");
     }
 }

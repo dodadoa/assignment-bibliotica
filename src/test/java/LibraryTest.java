@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 public class LibraryTest {
     private Library library;
@@ -25,6 +26,22 @@ public class LibraryTest {
     public void shouldGetListOfStringOfBookWhenListingBooksFromLibrary() {
         List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994", "Book2 | K. | 1990"));
         assertEquals(booksInformation, library.list());
+    }
+
+    @Test
+    public void shouldGetListOfStringOfBookWhichIsAvailableWhenListingBooksFromLibrary() {
+        List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994", "Book2 | K. | 1990"));
+        Book notAvailableBook = new Book("book3", "K.", 1000);
+        notAvailableBook.setAvailability(false);
+
+        initListsOfBooks.add(notAvailableBook);
+        assertEquals(booksInformation, library.list());
+    }
+
+    @Test
+    public void shouldBeTrueWhenCheckoutBookThatExistAndAvailable() {
+        boolean isCheckoutSuccessful = library.checkout("Book1");
+        assertTrue(isCheckoutSuccessful);
     }
 
 }
