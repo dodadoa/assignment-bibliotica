@@ -10,8 +10,4 @@ public class IO {
         String input = scanner.nextLine().trim();
         return input;
     }
-
-    public void quit() {
-        System.exit(0);
-    }
 }
