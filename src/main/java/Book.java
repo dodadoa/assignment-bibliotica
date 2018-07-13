@@ -13,7 +13,7 @@ public class Book {
         this.availability = true;
     }
 
-    public boolean checkExistanceFromBookName(String bookName){
+    public boolean checkExistenceFromBookName(String bookName){
         return bookName.equals(this.name) && this.availability;
     }
 

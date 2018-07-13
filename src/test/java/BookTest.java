@@ -24,17 +24,17 @@ public class BookTest {
 
     @Test
     public void shouldReturnTrueWhenCheckTheExistBookAndAvailable(){
-        assertTrue(book.checkExistanceFromBookName("Book1"));
+        assertTrue(book.checkExistenceFromBookName("Book1"));
     }
 
     @Test
     public void shouldReturnFalseWhenCheckTheBookIsNotAvailable(){
         book.setAvailability(false);
-        assertFalse(book.checkExistanceFromBookName("Book1"));
+        assertFalse(book.checkExistenceFromBookName("Book1"));
     }
 
     @Test
     public void shouldReturnFalseWhenCheckTheBookFromNameThatIsNotEqual(){
-        assertFalse(book.checkExistanceFromBookName("noNameBook"));
+        assertFalse(book.checkExistenceFromBookName("noNameBook"));
     }
 }

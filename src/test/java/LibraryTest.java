@@ -7,6 +7,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class LibraryTest {
     private Library library;
@@ -32,8 +33,6 @@ public class LibraryTest {
     public void shouldGetListOfStringOfBookWhichIsAvailableWhenListingBooksFromLibrary() {
         List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994"));
         book2.setAvailability(false);
-        List<Book> bookLists = new ArrayList<>(Arrays.asList(book1, book2));
-        library = new Library(bookLists);
         assertEquals(booksInformation, library.list());
     }
 
@@ -41,6 +40,19 @@ public class LibraryTest {
     public void shouldBeTrueWhenCheckoutBookThatExistAndAvailable() {
         boolean isCheckoutSuccessful = library.checkout("Book1");
         assertTrue(isCheckoutSuccessful);
+    }
+
+    @Test
+    public void shouldBeFalseWhenCheckoutBookThatNotExist() {
+        boolean isCheckoutSuccessful = library.checkout("Book-not-exists");
+        assertFalse(isCheckoutSuccessful);
+    }
+
+    @Test
+    public void shouldBeFalseWhenCheckoutBookThatNotAvailable() {
+        book1.setAvailability(false);
+        boolean isCheckoutSuccessful = library.checkout("Book1");
+        assertFalse(isCheckoutSuccessful);
     }
 
 }

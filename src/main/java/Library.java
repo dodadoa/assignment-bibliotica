@@ -20,7 +20,7 @@ public class Library {
 
     public boolean checkout(String bookNameInput) {
         for (Book book : this.listOfBooks) {
-            if(book.checkExistanceFromBookName(bookNameInput)){
+            if(book.checkExistenceFromBookName(bookNameInput)){
                 book.setAvailability(false);
                 return true;
             }
