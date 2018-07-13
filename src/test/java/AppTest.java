@@ -35,9 +35,16 @@ public class AppTest {
 
     @Test
     public void shouldListAlBookInTheLibraryWithInformationOfBook(){
-        app.listBooks();
-        verify(mockIO).displayColumn();
+        app.printList();
+        verify(mockIO).display("name, author, year published");
         verify(mockIO).display("Book1 | K. | 1994");
         verify(mockIO).display("Book2 | K. | 1990");
+    }
+
+    @Test
+    public void shouldShowMenuAndOptionListBooks(){
+        app.menu();
+        verify(mockIO).display("Menu:");
+        verify(mockIO).display("List Books");
     }
 }

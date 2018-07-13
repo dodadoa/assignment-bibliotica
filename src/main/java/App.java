@@ -11,13 +11,18 @@ public class App {
         io.display("Hello");
     }
 
-    public void listBooks(){
-        io.displayColumn();
+    public void printList(){
+        io.display("name, author, year published");
         library.list().forEach(book -> io.display(book));
     }
 
     public void run(){
         greeting();
-        listBooks();
+        printList();
+    }
+
+    public void menu() {
+        io.display("Menu:");
+        io.display("List Books");
     }
 }
