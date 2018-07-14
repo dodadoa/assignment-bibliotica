@@ -12,6 +12,5 @@ public class Main {
 
         App app = new App(io, library);
         app.run();
-
     }
 }

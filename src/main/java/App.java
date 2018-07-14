@@ -1,3 +1,4 @@
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public class App {
@@ -31,14 +32,22 @@ public class App {
         io.display("Checkout book -> type checkout and enter");
         io.display("Return book -> type return and enter");
         String input = io.input();
-        if (input.equals("quit")) {
-            this.quit();
-        } else if (input.equals("list")) {
-            this.printList();
-        } else if (input.equals("checkout")) {
-            this.checkoutMenu();
-        } else if (input.equals("return")) {
-            this.returnMenu();
+        Optional<MenuOption> option = MenuOption.getEnumByString(input);
+        if (option.isPresent()) {
+            switch (option.get()) {
+                case QUIT:
+                    this.quit();
+                    break;
+                case LIST:
+                    this.printList();
+                    break;
+                case CHECKOUT:
+                    this.checkoutMenu();
+                    break;
+                case RETURN:
+                    this.returnMenu();
+                    break;
+            }
         } else {
             io.display("Select a valid option!");
         }
@@ -59,7 +68,7 @@ public class App {
         io.display("please type the name of the book you want to return:");
         String bookNameInput = io.input();
         boolean isReturnSuccessful = library.checkin(bookNameInput);
-        if(isReturnSuccessful){
+        if (isReturnSuccessful) {
             io.display("Thank you for returning the book.");
         } else {
             io.display("That is not a valid book to return.");
