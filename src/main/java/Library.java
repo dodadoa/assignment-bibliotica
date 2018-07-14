@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 public class Library {
 
     private List<Book> listOfBooks;
+    private App appObserver;
 
     public Library(List<Book> initListsOfBooks) {
         this.listOfBooks = initListsOfBooks;
@@ -18,23 +19,29 @@ public class Library {
                 .collect(Collectors.toList());
     }
 
-    public boolean checkout(String bookNameInput) {
+    public void checkout(String bookNameInput) {
         for (Book book : this.listOfBooks) {
-            if (book.checkExistenceFromBookName(bookNameInput)) {
+            if (book.matchAvailableBook(bookNameInput)) {
                 book.setAvailability(false);
-                return true;
+                appObserver.setOperationStatus(true);
+                return;
             }
         }
-        return false;
+        appObserver.setOperationStatus(false);
     }
 
-    public boolean checkin(String bookNameInput) {
+    public void checkin(String bookNameInput) {
         for (Book book : this.listOfBooks) {
-            if (book.isBookBelongToLibrary(bookNameInput)) {
+            if (book.matchNonAvailableBook(bookNameInput)) {
                 book.setAvailability(true);
-                return true;
+                appObserver.setOperationStatus(true);
+                return;
             }
         }
-        return false;
+        appObserver.setOperationStatus(false);
+    }
+
+    public void addAppObserver(App app) {
+        this.appObserver = app;
     }
 }

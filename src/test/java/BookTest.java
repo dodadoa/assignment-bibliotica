@@ -24,33 +24,33 @@ public class BookTest {
 
     @Test
     public void shouldReturnTrueWhenCheckTheExistBookAndAvailable() {
-        assertTrue(book.checkExistenceFromBookName("Book1"));
+        assertTrue(book.matchAvailableBook("Book1"));
     }
 
     @Test
     public void shouldReturnFalseWhenCheckTheBookIsNotAvailable() {
         book.setAvailability(false);
-        assertFalse(book.checkExistenceFromBookName("Book1"));
+        assertFalse(book.matchAvailableBook("Book1"));
     }
 
     @Test
     public void shouldReturnFalseWhenCheckTheBookFromNameThatIsNotEqual() {
-        assertFalse(book.checkExistenceFromBookName("noNameBook"));
+        assertFalse(book.matchAvailableBook("noNameBook"));
     }
 
     @Test
     public void shouldReturnTrueWhenReturnTheBookThatBelongToLibraryAndNotAvailable() {
         book.setAvailability(false);
-        assertTrue(book.isBookBelongToLibrary("Book1"));
+        assertTrue(book.matchNonAvailableBook("Book1"));
     }
 
     @Test
     public void shouldReturnFalseWhenReturnTheBookThatNotBelongToLibrary() {
-        assertFalse(book.isBookBelongToLibrary("noNameBook"));
+        assertFalse(book.matchNonAvailableBook("noNameBook"));
     }
 
     @Test
     public void shouldReturnFalseWhenReturnTheBookThatAlreadyAvailableInLibrary() {
-        assertFalse(book.isBookBelongToLibrary("Book1"));
+        assertFalse(book.matchNonAvailableBook("Book1"));
     }
 }

@@ -4,11 +4,14 @@ public class App {
     private IO io;
     private Library library;
     private boolean isRunning;
+    private boolean isOperationSuccess;
 
     public App(IO io, Library library) {
         this.io = io;
         this.library = library;
         this.isRunning = true;
+        this.isOperationSuccess = false;
+        this.library.addAppObserver(this);
     }
 
     public void greeting() {
@@ -52,26 +55,28 @@ public class App {
         }
     }
 
+    public void setOperationStatus(boolean isSuccess){
+        this.isOperationSuccess = isSuccess;
+    }
+
+    private void resetOperationStatus(){
+        this.isOperationSuccess = false;
+    }
+
     public void checkoutMenu() {
         io.display("please type the name of the book you want to checkout:");
         String bookNameInput = io.input();
-        boolean isCheckoutSuccessful = library.checkout(bookNameInput);
-        if (isCheckoutSuccessful) {
-            io.display("Thank you! Enjoy the book");
-        } else {
-            io.display("That book is not available.");
-        }
+        library.checkout(bookNameInput);
+        io.display(this.isOperationSuccess ? "Thank you! Enjoy the book" : "That book is not available.");
+        resetOperationStatus();
     }
 
     public void returnMenu() {
         io.display("please type the name of the book you want to return:");
         String bookNameInput = io.input();
-        boolean isReturnSuccessful = library.checkin(bookNameInput);
-        if (isReturnSuccessful) {
-            io.display("Thank you for returning the book.");
-        } else {
-            io.display("That is not a valid book to return.");
-        }
+        library.checkin(bookNameInput);
+        io.display(this.isOperationSuccess ? "Thank you for returning the book." : "That is not a valid book to return.");
+        resetOperationStatus();
     }
 
     public void run() {

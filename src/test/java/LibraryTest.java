@@ -6,21 +6,24 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class LibraryTest {
     private Library library;
     private Book book1;
     private Book book2;
     private List<Book> initListsOfBooks;
+    private App mockApp;
 
     @Before
     public void beforeEach() {
         book1 = new Book("Book1", "K.", 1994);
         book2 = new Book("Book2", "K.", 1990);
         initListsOfBooks = new ArrayList<>(Arrays.asList(book1, book2));
+        mockApp = mock(App.class);
         library = new Library(initListsOfBooks);
+        library.addAppObserver(mockApp);
     }
 
     @Test
@@ -38,40 +41,40 @@ public class LibraryTest {
 
     @Test
     public void shouldBeTrueWhenCheckoutBookThatExistAndAvailable() {
-        boolean isCheckoutSuccessful = library.checkout("Book1");
-        assertTrue(isCheckoutSuccessful);
+        library.checkout("Book1");
+        verify(mockApp).setOperationStatus(true);
     }
 
     @Test
     public void shouldBeFalseWhenCheckoutBookThatNotExist() {
-        boolean isCheckoutSuccessful = library.checkout("Book-not-exists");
-        assertFalse(isCheckoutSuccessful);
+        library.checkout("Book-not-exists");
+        verify(mockApp).setOperationStatus(false);
     }
 
     @Test
     public void shouldBeFalseWhenCheckoutBookThatNotAvailable() {
         book1.setAvailability(false);
-        boolean isCheckoutSuccessful = library.checkout("Book1");
-        assertFalse(isCheckoutSuccessful);
+        library.checkout("Book1");
+        verify(mockApp).setOperationStatus(false);
     }
 
     @Test
     public void shouldBeTrueWhenReturnBookThatBelongsToLibraryAndNotAvailable() {
         book1.setAvailability(false);
-        boolean isReturnSuccessful = library.checkin("Book1");
-        assertTrue(isReturnSuccessful);
+        library.checkin("Book1");
+        verify(mockApp).setOperationStatus(true);
     }
 
     @Test
     public void shouldBeFalseWhenReturnBookThatNotBelongsToLibrary() {
-        boolean isReturnSuccessful = library.checkin("Book-not-exists");
-        assertFalse(isReturnSuccessful);
+        library.checkin("Book-not-exists");
+        verify(mockApp).setOperationStatus(false);
     }
 
     @Test
     public void shouldBeFalseWhenReturnBookThatAlreadyAvailableInLibrary() {
-        boolean isReturnSuccessful = library.checkin("Book1");
-        assertFalse(isReturnSuccessful);
+        library.checkin("Book1");
+        verify(mockApp).setOperationStatus(false);
     }
 
 }

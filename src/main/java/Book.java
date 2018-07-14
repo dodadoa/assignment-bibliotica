@@ -13,11 +13,11 @@ public class Book {
         this.availability = true;
     }
 
-    public boolean checkExistenceFromBookName(String bookName) {
+    public boolean matchAvailableBook(String bookName) {
         return bookName.equals(this.name) && this.availability;
     }
 
-    public boolean isBookBelongToLibrary(String bookName) {
+    public boolean matchNonAvailableBook(String bookName) {
         return bookName.equals(this.name) && !this.availability;
     }
 
