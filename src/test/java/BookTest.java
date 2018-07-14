@@ -11,46 +11,46 @@ public class BookTest {
     private Book book;
 
     @Before
-    public void beforeEach(){
+    public void beforeEach() {
         book = new Book("Book1", "K.", 1994);
     }
 
     @Test
-    public void shouldNotGetBookInformationThatHaveAlreadyCheckout(){
+    public void shouldNotGetBookInformationThatHaveAlreadyCheckout() {
         book.setAvailability(false);
         Optional<String> optionalBook = book.getInformation();
         assertFalse(optionalBook.isPresent());
     }
 
     @Test
-    public void shouldReturnTrueWhenCheckTheExistBookAndAvailable(){
+    public void shouldReturnTrueWhenCheckTheExistBookAndAvailable() {
         assertTrue(book.checkExistenceFromBookName("Book1"));
     }
 
     @Test
-    public void shouldReturnFalseWhenCheckTheBookIsNotAvailable(){
+    public void shouldReturnFalseWhenCheckTheBookIsNotAvailable() {
         book.setAvailability(false);
         assertFalse(book.checkExistenceFromBookName("Book1"));
     }
 
     @Test
-    public void shouldReturnFalseWhenCheckTheBookFromNameThatIsNotEqual(){
+    public void shouldReturnFalseWhenCheckTheBookFromNameThatIsNotEqual() {
         assertFalse(book.checkExistenceFromBookName("noNameBook"));
     }
 
     @Test
-    public void shouldReturnTrueWhenReturnTheBookThatBelongToLibraryAndNotAvailable(){
+    public void shouldReturnTrueWhenReturnTheBookThatBelongToLibraryAndNotAvailable() {
         book.setAvailability(false);
         assertTrue(book.isBookBelongToLibrary("Book1"));
     }
 
     @Test
-    public void shouldReturnFalseWhenReturnTheBookThatNotBelongToLibrary(){
+    public void shouldReturnFalseWhenReturnTheBookThatNotBelongToLibrary() {
         assertFalse(book.isBookBelongToLibrary("noNameBook"));
     }
 
     @Test
-    public void shouldReturnFalseWhenReturnTheBookThatAlreadyAvailableInLibrary(){
+    public void shouldReturnFalseWhenReturnTheBookThatAlreadyAvailableInLibrary() {
         assertFalse(book.isBookBelongToLibrary("Book1"));
     }
 }

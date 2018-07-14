@@ -13,16 +13,16 @@ public class Book {
         this.availability = true;
     }
 
-    public boolean checkExistenceFromBookName(String bookName){
+    public boolean checkExistenceFromBookName(String bookName) {
         return bookName.equals(this.name) && this.availability;
     }
 
-    public boolean isBookBelongToLibrary(String bookName){
+    public boolean isBookBelongToLibrary(String bookName) {
         return bookName.equals(this.name) && !this.availability;
     }
 
     public Optional<String> getInformation() {
-        if(this.availability){
+        if (this.availability) {
             return Optional.of(String.format("%s | %s | %s", this.name, this.author, this.yearPublished));
         }
         return Optional.empty();

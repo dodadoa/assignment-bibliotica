@@ -111,7 +111,7 @@ public class AppTest {
     }
 
     @Test
-    public void shouldGoToReturnMenuWhenInputFromMainMenuIsReturn(){
+    public void shouldGoToReturnMenuWhenInputFromMainMenuIsReturn() {
         App spyApp = spy(app);
         when(mockIO.input()).thenReturn("return");
         spyApp.menu();

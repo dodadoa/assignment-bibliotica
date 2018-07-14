@@ -7,13 +7,13 @@ import static org.junit.Assert.assertFalse;
 
 public class MenuOptionTest {
     @Test
-    public void shouldGetQuitEnumFromStringQuit(){
+    public void shouldGetQuitEnumFromStringQuit() {
         Optional<MenuOption> option = MenuOption.getEnumByString("quit");
         assertEquals(MenuOption.QUIT, option.get());
     }
 
     @Test
-    public void shouldNotGetAnythingIfTheInputStringIsNotValid(){
+    public void shouldNotGetAnythingIfTheInputStringIsNotValid() {
         Optional<MenuOption> option = MenuOption.getEnumByString("not-exist");
         assertFalse(option.isPresent());
     }
