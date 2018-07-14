@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 public class Library {
 
     private List<Book> listOfBooks;
-    private App appObserver;
+    private OperationObserver operationObserver;
 
     public Library(List<Book> initListsOfBooks) {
         this.listOfBooks = initListsOfBooks;
@@ -23,25 +23,25 @@ public class Library {
         for (Book book : this.listOfBooks) {
             if (book.matchAvailableBook(bookNameInput)) {
                 book.setAvailability(false);
-                appObserver.setOperationStatus(true);
+                operationObserver.setOperationStatus(true);
                 return;
             }
         }
-        appObserver.setOperationStatus(false);
+        operationObserver.setOperationStatus(false);
     }
 
     public void checkin(String bookNameInput) {
         for (Book book : this.listOfBooks) {
             if (book.matchNonAvailableBook(bookNameInput)) {
                 book.setAvailability(true);
-                appObserver.setOperationStatus(true);
+                operationObserver.setOperationStatus(true);
                 return;
             }
         }
-        appObserver.setOperationStatus(false);
+        operationObserver.setOperationStatus(false);
     }
 
-    public void addAppObserver(App app) {
-        this.appObserver = app;
+    public void addOperationObserver(OperationObserver app) {
+        this.operationObserver = app;
     }
 }

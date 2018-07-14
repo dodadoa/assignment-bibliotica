@@ -4,14 +4,13 @@ public class App {
     private IO io;
     private Library library;
     private boolean isRunning;
-    private boolean isOperationSuccess;
+    private OperationObserver operationObserver = new OperationObserver();
 
     public App(IO io, Library library) {
         this.io = io;
         this.library = library;
         this.isRunning = true;
-        this.isOperationSuccess = false;
-        this.library.addAppObserver(this);
+        this.library.addOperationObserver(this.operationObserver);
     }
 
     public void greeting() {
@@ -55,28 +54,18 @@ public class App {
         }
     }
 
-    public void setOperationStatus(boolean isSuccess){
-        this.isOperationSuccess = isSuccess;
-    }
-
-    private void resetOperationStatus(){
-        this.isOperationSuccess = false;
-    }
-
     public void checkoutMenu() {
         io.display("please type the name of the book you want to checkout:");
         String bookNameInput = io.input();
         library.checkout(bookNameInput);
-        io.display(this.isOperationSuccess ? "Thank you! Enjoy the book" : "That book is not available.");
-        resetOperationStatus();
+        io.display(this.operationObserver.isSuccess() ? "Thank you! Enjoy the book" : "That book is not available.");
     }
 
     public void returnMenu() {
         io.display("please type the name of the book you want to return:");
         String bookNameInput = io.input();
         library.checkin(bookNameInput);
-        io.display(this.isOperationSuccess ? "Thank you for returning the book." : "That is not a valid book to return.");
-        resetOperationStatus();
+        io.display(this.operationObserver.isSuccess() ? "Thank you for returning the book." : "That is not a valid book to return.");
     }
 
     public void run() {
