@@ -37,4 +37,20 @@ public class BookTest {
     public void shouldReturnFalseWhenCheckTheBookFromNameThatIsNotEqual(){
         assertFalse(book.checkExistenceFromBookName("noNameBook"));
     }
+
+    @Test
+    public void shouldReturnTrueWhenReturnTheBookThatBelongToLibraryAndNotAvailable(){
+        book.setAvailability(false);
+        assertTrue(book.isBookBelongToLibrary("Book1"));
+    }
+
+    @Test
+    public void shouldReturnFalseWhenReturnTheBookThatNotBelongToLibrary(){
+        assertFalse(book.isBookBelongToLibrary("noNameBook"));
+    }
+
+    @Test
+    public void shouldReturnFalseWhenReturnTheBookThatAlreadyAvailableInLibrary(){
+        assertFalse(book.isBookBelongToLibrary("Book1"));
+    }
 }

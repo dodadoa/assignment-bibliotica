@@ -17,6 +17,10 @@ public class Book {
         return bookName.equals(this.name) && this.availability;
     }
 
+    public boolean isBookBelongToLibrary(String bookName){
+        return bookName.equals(this.name) && !this.availability;
+    }
+
     public Optional<String> getInformation() {
         if(this.availability){
             return Optional.of(String.format("%s | %s | %s", this.name, this.author, this.yearPublished));

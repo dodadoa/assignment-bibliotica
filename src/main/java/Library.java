@@ -27,4 +27,14 @@ public class Library {
         }
         return false;
     }
+
+    public boolean checkin(String bookNameInput) {
+        for (Book book : this.listOfBooks) {
+            if(book.isBookBelongToLibrary(bookNameInput)){
+                book.setAvailability(true);
+                return true;
+            }
+        }
+        return false;
+    }
 }

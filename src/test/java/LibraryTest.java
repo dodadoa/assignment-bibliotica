@@ -55,4 +55,23 @@ public class LibraryTest {
         assertFalse(isCheckoutSuccessful);
     }
 
+    @Test
+    public void shouldBeTrueWhenReturnBookThatBelongsToLibraryAndNotAvailable(){
+        book1.setAvailability(false);
+        boolean isReturnSuccessful = library.checkin("Book1");
+        assertTrue(isReturnSuccessful);
+    }
+
+    @Test
+    public void shouldBeFalseWhenReturnBookThatNotBelongsToLibrary(){
+        boolean isReturnSuccessful = library.checkin("Book-not-exists");
+        assertFalse(isReturnSuccessful);
+    }
+
+    @Test
+    public void shouldBeFalseWhenReturnBookThatAlreadyAvailableInLibrary(){
+        boolean isReturnSuccessful = library.checkin("Book1");
+        assertFalse(isReturnSuccessful);
+    }
+
 }

@@ -54,6 +54,7 @@ public class AppTest {
         verify(mockIO).display("List Books -> type list and enter");
         verify(mockIO).display("Quit app -> type quit and enter");
         verify(mockIO).display("Checkout book -> type checkout and enter");
+        verify(mockIO).display("Return book -> type return and enter");
     }
 
     @Test
@@ -107,5 +108,13 @@ public class AppTest {
         app.checkoutMenu();
         app.checkoutMenu();
         verify(mockIO).display("That book is not available.");
+    }
+
+    @Test
+    public void shouldGoToReturnMenuWhenInputFromMainMenuIsReturn(){
+        App spyApp = spy(app);
+        when(mockIO.input()).thenReturn("return");
+        spyApp.menu();
+        verify(spyApp).returnMenu();
     }
 }
