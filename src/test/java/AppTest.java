@@ -117,4 +117,26 @@ public class AppTest {
         spyApp.menu();
         verify(spyApp).returnMenu();
     }
+
+    @Test
+    public void shouldDisplaySuccessfulMessageWhenReturnTheBookThatBelongToLibraryAndNotAvailable() {
+        when(mockIO.input()).thenReturn("Book1");
+        app.checkoutMenu();
+        app.returnMenu();
+        verify(mockIO).display("Thank you for returning the book.");
+    }
+
+    @Test
+    public void shouldDisplayFailMessageWhenReturnTheBookThatNotBelongToLibrary() {
+        when(mockIO.input()).thenReturn("noNameBook");
+        app.returnMenu();
+        verify(mockIO).display("That is not a valid book to return.");
+    }
+
+    @Test
+    public void shouldDisplayFailMessageWhenReturnTheBookThatAlreadyAvailableInLibrary() {
+        when(mockIO.input()).thenReturn("Book1");
+        app.returnMenu();
+        verify(mockIO).display("That is not a valid book to return.");
+    }
 }
