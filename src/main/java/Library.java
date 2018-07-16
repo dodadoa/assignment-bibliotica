@@ -20,25 +20,27 @@ public class Library {
     }
 
     public void checkout(String itemNameInput) {
-        for (LibraryItem item : this.libraryItemList) {
-            if (item.matchAvailable(itemNameInput)) {
-                item.setAvailability(false);
-                operationObserver.setOperationStatus(true);
-                return;
-            }
+        Optional<LibraryItem> optionalItem = this.libraryItemList.stream()
+                .filter(item -> item.matchAvailable(itemNameInput))
+                .findFirst();
+        if(optionalItem.isPresent()){
+            optionalItem.get().setAvailability(false);
+            operationObserver.setOperationStatus(true);
+        } else {
+            operationObserver.setOperationStatus(false);
         }
-        operationObserver.setOperationStatus(false);
     }
 
-    public void checkin(String bookNameInput) {
-        for (LibraryItem item : this.libraryItemList) {
-            if (item.matchNonAvailable(bookNameInput)) {
-                item.setAvailability(true);
-                operationObserver.setOperationStatus(true);
-                return;
-            }
+    public void checkin(String itemNameInput) {
+        Optional<LibraryItem> optionalItem = this.libraryItemList.stream()
+                .filter(item -> item.matchNonAvailable(itemNameInput))
+                .findFirst();
+        if(optionalItem.isPresent()){
+            optionalItem.get().setAvailability(true);
+            operationObserver.setOperationStatus(true);
+        } else {
+            operationObserver.setOperationStatus(false);
         }
-        operationObserver.setOperationStatus(false);
     }
 
     public void addOperationObserver(OperationObserver app) {
