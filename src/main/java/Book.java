@@ -1,6 +1,6 @@
 import java.util.Optional;
 
-public class Book {
+public class Book implements LibraryItem{
     private final String name;
     private final String author;
     private final int yearPublished;
@@ -13,11 +13,11 @@ public class Book {
         this.availability = true;
     }
 
-    public boolean matchAvailableBook(String bookName) {
+    public boolean matchAvailable(String bookName) {
         return bookName.equals(this.name) && this.availability;
     }
 
-    public boolean matchNonAvailableBook(String bookName) {
+    public boolean matchNonAvailable(String bookName) {
         return bookName.equals(this.name) && !this.availability;
     }
 

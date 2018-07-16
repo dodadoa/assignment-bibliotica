@@ -12,19 +12,31 @@ public class AppTest {
 
     private IO mockIO;
     private App app;
-    private Library library;
+    private Library bookLibrary;
+    private Library movieLibrary;
     private Book book1;
     private Book book2;
-    private List<Book> initListsOfBooks;
+    private List<LibraryItem> initBooksList;
+    private Movie movie1;
+    private Movie movie2;
+    private List<LibraryItem> initMoviesList;
 
     @Before
     public void beforeEach() {
         mockIO = mock(IO.class);
+
         book1 = new Book("Book1", "K.", 1994);
         book2 = new Book("Book2", "K.", 1990);
-        initListsOfBooks = new ArrayList<>(Arrays.asList(book1, book2));
-        library = new Library(initListsOfBooks);
-        app = new App(mockIO, library);
+        movie1 = new Movie("Movie1", "L.", 2000, 10);
+        movie2 = new Movie("Movie2", "G.", 3000, 5);
+
+        initBooksList = new ArrayList<>(Arrays.asList(book1, book2));
+        initMoviesList = new ArrayList<>(Arrays.asList(movie1, movie2));
+
+        bookLibrary = new Library(initBooksList);
+        movieLibrary = new Library(initMoviesList);
+
+        app = new App(mockIO, bookLibrary, movieLibrary);
     }
 
     @After
@@ -40,29 +52,17 @@ public class AppTest {
 
     @Test
     public void shouldListAlBookInTheLibraryWithInformationOfBook() {
-        app.printList();
-        verify(mockIO).display("name, author, year published");
+        app.list(bookLibrary);
         verify(mockIO).display("Book1 | K. | 1994");
         verify(mockIO).display("Book2 | K. | 1990");
     }
 
     @Test
-    public void shouldShowMenuAndOptionListBooks() {
-        when(mockIO.input()).thenReturn("");
-        app.menu();
-        verify(mockIO).display("Menu:");
-        verify(mockIO).display("List Books -> type list and enter");
-        verify(mockIO).display("Quit app -> type quit and enter");
-        verify(mockIO).display("Checkout book -> type checkout and enter");
-        verify(mockIO).display("Return book -> type return and enter");
-    }
-
-    @Test
-    public void shouldPrintListOfBookWhenUserInput1() {
+    public void shouldPrintListOfBookWhenUserInputBook() {
         App spyApp = spy(app);
-        when(mockIO.input()).thenReturn("list");
-        spyApp.menu();
-        verify(spyApp).printList();
+        when(mockIO.input()).thenReturn("book");
+        spyApp.listMenu();
+        verify(spyApp).list(bookLibrary);
     }
 
     @Test
@@ -90,21 +90,21 @@ public class AppTest {
 
     @Test
     public void shouldDisplaySuccessfulMessageWhenCheckoutTheBookThatExistAndAvailable() {
-        when(mockIO.input()).thenReturn("Book1");
+        when(mockIO.input()).thenReturn("book").thenReturn("Book1");
         app.checkoutMenu();
         verify(mockIO).display("Thank you! Enjoy the book");
     }
 
     @Test
     public void shouldDisplayFailMessageWhenCheckoutTheBookThatNotExist() {
-        when(mockIO.input()).thenReturn("Book10");
+        when(mockIO.input()).thenReturn("book").thenReturn("Book10");
         app.checkoutMenu();
         verify(mockIO).display("That book is not available.");
     }
 
     @Test
     public void shouldDisplayFailMessageWhenCheckoutTheBookThatNotAvailable() {
-        when(mockIO.input()).thenReturn("Book1");
+        when(mockIO.input()).thenReturn("book").thenReturn("Book1").thenReturn("book").thenReturn("Book1");
         app.checkoutMenu();
         app.checkoutMenu();
         verify(mockIO).display("That book is not available.");
@@ -120,7 +120,7 @@ public class AppTest {
 
     @Test
     public void shouldDisplaySuccessfulMessageWhenReturnTheBookThatBelongToLibraryAndNotAvailable() {
-        when(mockIO.input()).thenReturn("Book1");
+        when(mockIO.input()).thenReturn("book").thenReturn("Book1").thenReturn("book").thenReturn("Book1");
         app.checkoutMenu();
         app.returnMenu();
         verify(mockIO).display("Thank you for returning the book.");
@@ -128,14 +128,14 @@ public class AppTest {
 
     @Test
     public void shouldDisplayFailMessageWhenReturnTheBookThatNotBelongToLibrary() {
-        when(mockIO.input()).thenReturn("noNameBook");
+        when(mockIO.input()).thenReturn("book").thenReturn("noNameBook");
         app.returnMenu();
         verify(mockIO).display("That is not a valid book to return.");
     }
 
     @Test
     public void shouldDisplayFailMessageWhenReturnTheBookThatAlreadyAvailableInLibrary() {
-        when(mockIO.input()).thenReturn("Book1");
+        when(mockIO.input()).thenReturn("book").thenReturn("Book1");
         app.returnMenu();
         verify(mockIO).display("That is not a valid book to return.");
     }

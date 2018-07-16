@@ -13,7 +13,7 @@ public class LibraryTest {
     private Library library;
     private Book book1;
     private Book book2;
-    private List<Book> initListsOfBooks;
+    private List<LibraryItem> initListsOfBooks;
     private OperationObserver mockOperationObserver;
 
     @Before

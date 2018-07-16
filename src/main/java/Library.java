@@ -4,25 +4,25 @@ import java.util.stream.Collectors;
 
 public class Library {
 
-    private List<Book> listOfBooks;
+    private List<LibraryItem> libraryItemList;
     private OperationObserver operationObserver;
 
-    public Library(List<Book> initListsOfBooks) {
-        this.listOfBooks = initListsOfBooks;
+    public Library(List<LibraryItem> initItemsList) {
+        this.libraryItemList = initItemsList;
     }
 
     public List<String> list() {
-        return this.listOfBooks.stream()
-                .map(Book::getInformation)
+        return this.libraryItemList.stream()
+                .map(LibraryItem::getInformation)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    public void checkout(String bookNameInput) {
-        for (Book book : this.listOfBooks) {
-            if (book.matchAvailableBook(bookNameInput)) {
-                book.setAvailability(false);
+    public void checkout(String itemNameInput) {
+        for (LibraryItem item : this.libraryItemList) {
+            if (item.matchAvailable(itemNameInput)) {
+                item.setAvailability(false);
                 operationObserver.setOperationStatus(true);
                 return;
             }
@@ -31,9 +31,9 @@ public class Library {
     }
 
     public void checkin(String bookNameInput) {
-        for (Book book : this.listOfBooks) {
-            if (book.matchNonAvailableBook(bookNameInput)) {
-                book.setAvailability(true);
+        for (LibraryItem item : this.libraryItemList) {
+            if (item.matchNonAvailable(bookNameInput)) {
+                item.setAvailability(true);
                 operationObserver.setOperationStatus(true);
                 return;
             }
