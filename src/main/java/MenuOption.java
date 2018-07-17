@@ -4,7 +4,10 @@ public enum MenuOption {
     QUIT("quit"),
     LIST("list"),
     CHECKOUT("checkout"),
-    RETURN("return");
+    RETURN("return"),
+    USER_INFORMATION("info"),
+    LOGIN("login"),
+    LOGOUT("logout");
 
     private String option;
 

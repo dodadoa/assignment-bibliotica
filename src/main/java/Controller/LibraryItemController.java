@@ -1,13 +1,18 @@
+package Controller;
+
+import Model.LibraryItem.LibraryItem;
+import Utils.OperationObserver;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Library {
+public class LibraryItemController {
 
     private List<LibraryItem> libraryItemList;
     private OperationObserver operationObserver;
 
-    public Library(List<LibraryItem> initItemsList) {
+    public LibraryItemController(List<LibraryItem> initItemsList) {
         this.libraryItemList = initItemsList;
     }
 
@@ -23,7 +28,7 @@ public class Library {
         Optional<LibraryItem> optionalItem = this.libraryItemList.stream()
                 .filter(item -> item.matchAvailable(itemNameInput))
                 .findFirst();
-        if(optionalItem.isPresent()){
+        if (optionalItem.isPresent()) {
             optionalItem.get().setAvailability(false);
             operationObserver.setOperationStatus(true);
         } else {
@@ -35,7 +40,7 @@ public class Library {
         Optional<LibraryItem> optionalItem = this.libraryItemList.stream()
                 .filter(item -> item.matchNonAvailable(itemNameInput))
                 .findFirst();
-        if(optionalItem.isPresent()){
+        if (optionalItem.isPresent()) {
             optionalItem.get().setAvailability(true);
             operationObserver.setOperationStatus(true);
         } else {

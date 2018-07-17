@@ -1,6 +1,8 @@
+package Model.LibraryItem;
+
 import java.util.Optional;
 
-public class Book implements LibraryItem{
+public class Book implements LibraryItem {
     private final String name;
     private final String author;
     private final int yearPublished;

@@ -1,71 +1,63 @@
+import Utils.IO;
+import View.AuthenticationView;
+import View.LibraryItemView;
+
 import java.util.Optional;
 
 public class App {
-    private final Library bookLibrary;
-    private final Library movieLibrary;
+    private final LibraryItemView libraryItemView;
+    private final AuthenticationView authenticationView;
     private IO io;
-
     private boolean isRunning;
-    private OperationObserver operationObserver = new OperationObserver();
 
-    public App(IO io, Library bookLibrary, Library movieLibrary) {
+    public App(IO io, LibraryItemView libraryItemView, AuthenticationView authenticationView) {
         this.io = io;
-        this.bookLibrary = bookLibrary;
-        this.movieLibrary = movieLibrary;
         this.isRunning = true;
-        this.movieLibrary.addOperationObserver(this.operationObserver);
-        this.bookLibrary.addOperationObserver(this.operationObserver);
+        this.libraryItemView = libraryItemView;
+        this.authenticationView = authenticationView;
     }
 
     public void greeting() {
         io.display("Hello");
     }
 
-    public void list(Library library) {
-        library.list().forEach(libraryItem -> io.display(libraryItem));
-    }
-
-    public void listMenu() {
-        io.display("List menu:");
-        io.display("List Book -> type book and enter");
-        io.display("List Movie -> type movie and enter");
-        String input = io.input();
-        if ("book".equals(input)){
-            io.display("name, author, year published");
-            list(bookLibrary);
-        } else if ("movie".equals(input)){
-            io.display("name, year, director, movie rating");
-            list(movieLibrary);
-        } else {
-            io.display("Select a valid option!");
-        }
-    }
-
     public void quit() {
         this.isRunning = false;
     }
 
-    public void menu() {
-        io.display("Menu:");
+    private void authorizedMenu() {
         io.display("List -> type list and enter");
         io.display("Quit app -> type quit and enter");
-        io.display("Checkout book -> type checkout and enter");
-        io.display("Return book -> type return and enter");
+        io.display("Checkout Item -> type checkout and enter");
+        io.display("Return Item -> type return and enter");
+        io.display("Get your information -> type info and enter");
+        io.display("Logout -> type logout and enter");
+
         String input = io.input();
         Optional<MenuOption> option = MenuOption.getEnumByString(input);
+
         if (option.isPresent()) {
             switch (option.get()) {
+                case LIST:
+                    this.libraryItemView.listBranch();
+                    break;
+                case CHECKOUT:
+                    this.libraryItemView.checkoutBranch();
+                    break;
+                case RETURN:
+                    this.libraryItemView.checkinBranch();
+                    break;
+                case USER_INFORMATION:
+                    this.authenticationView.showInformation();
+                    break;
+                case LOGOUT:
+                    this.authenticationView.logout();
+                    break;
                 case QUIT:
                     this.quit();
                     break;
-                case LIST:
-                    this.listMenu();
-                    break;
-                case CHECKOUT:
-                    this.checkoutMenu();
-                    break;
-                case RETURN:
-                    this.returnMenu();
+                default:
+                    io.display("Select a valid option!");
                     break;
             }
         } else {
@@ -73,43 +65,40 @@ public class App {
         }
     }
 
-    public void checkoutMenu() {
-        io.display("Checkout menu:");
-        io.display("Checkout Book -> type book and enter");
-        io.display("Checkout Movie -> type book and enter");
+    private void unauthorizedMenu() {
+        io.display("List -> type list and enter");
+        io.display("Quit app -> type quit and enter");
+        io.display("Login -> type login and enter");
+
         String input = io.input();
-        if ("book".equals(input)) {
-            io.display("please type the name of the book you want to checkout:");
-            String bookNameInput = io.input();
-            bookLibrary.checkout(bookNameInput);
-            io.display(this.operationObserver.isSuccess() ? "Thank you! Enjoy the book" : "That book is not available.");
-        } else if ("movie".equals(input)) {
-            io.display("please type the name of the movie you want to checkout:");
-            String movieNameInput = io.input();
-            movieLibrary.checkout(movieNameInput);
-            io.display(this.operationObserver.isSuccess() ? "Thank you! Enjoy the book" : "That book is not available.");
+        Optional<MenuOption> option = MenuOption.getEnumByString(input);
+
+        if (option.isPresent()) {
+            switch (option.get()) {
+                case LIST:
+                    this.libraryItemView.listBranch();
+                    break;
+                case LOGIN:
+                    this.authenticationView.login();
+                    break;
+                case QUIT:
+                    this.quit();
+                    break;
+                default:
+                    io.display("Select a valid option!");
+                    break;
+            }
         } else {
             io.display("Select a valid option!");
         }
     }
 
-    public void returnMenu() {
-        io.display("Return menu:");
-        io.display("Return Book -> type book and enter");
-        io.display("Return Movie -> type book and enter");
-        String input = io.input();
-        if ("book".equals(input)) {
-            io.display("please type the name of the book you want to return:");
-            String bookNameInput = io.input();
-            bookLibrary.checkin(bookNameInput);
-            io.display(this.operationObserver.isSuccess() ? "Thank you for returning the book." : "That is not a valid book to return.");
-        } else if ("movie".equals(input)) {
-            io.display("please type the name of the movie you want to checkout:");
-            String movieNameInput = io.input();
-            movieLibrary.checkin(movieNameInput);
-            io.display(this.operationObserver.isSuccess() ? "Thank you for returning the movie." : "That is not a valid movie to return.");
+    public void menu() {
+        io.display("Menu:");
+        if (this.authenticationView.isAuth()) {
+            this.authorizedMenu();
         } else {
-            io.display("Select a valid option!");
+            this.unauthorizedMenu();
         }
     }
 

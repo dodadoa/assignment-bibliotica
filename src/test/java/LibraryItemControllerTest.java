@@ -1,79 +1,83 @@
-import org.junit.Before;
-import org.junit.Test;
+import Controller.LibraryItemController;
+import Model.LibraryItem.Book;
+import Model.LibraryItem.LibraryItem;
+import Utils.OperationObserver;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class LibraryTest {
-    private Library library;
+public class LibraryItemControllerTest {
+    private LibraryItemController libraryItemController;
     private Book book1;
     private Book book2;
     private List<LibraryItem> initListsOfBooks;
     private OperationObserver mockOperationObserver;
 
-    @Before
+    @BeforeEach
     public void beforeEach() {
         book1 = new Book("Book1", "K.", 1994);
         book2 = new Book("Book2", "K.", 1990);
         initListsOfBooks = new ArrayList<>(Arrays.asList(book1, book2));
         mockOperationObserver = mock(OperationObserver.class);
-        library = new Library(initListsOfBooks);
-        library.addOperationObserver(mockOperationObserver);
+        libraryItemController = new LibraryItemController(initListsOfBooks);
+        libraryItemController.addOperationObserver(mockOperationObserver);
     }
 
     @Test
     public void shouldGetListOfStringOfBookWhenListingBooksFromLibrary() {
         List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994", "Book2 | K. | 1990"));
-        assertEquals(booksInformation, library.list());
+        assertEquals(booksInformation, libraryItemController.list());
     }
 
     @Test
     public void shouldGetListOfStringOfBookWhichIsAvailableWhenListingBooksFromLibrary() {
         List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994"));
         book2.setAvailability(false);
-        assertEquals(booksInformation, library.list());
+        assertEquals(booksInformation, libraryItemController.list());
     }
 
     @Test
     public void shouldBeTrueWhenCheckoutBookThatExistAndAvailable() {
-        library.checkout("Book1");
+        libraryItemController.checkout("Book1");
         verify(mockOperationObserver).setOperationStatus(true);
     }
 
     @Test
     public void shouldBeFalseWhenCheckoutBookThatNotExist() {
-        library.checkout("Book-not-exists");
+        libraryItemController.checkout("Book-not-exists");
         verify(mockOperationObserver).setOperationStatus(false);
     }
 
     @Test
     public void shouldBeFalseWhenCheckoutBookThatNotAvailable() {
         book1.setAvailability(false);
-        library.checkout("Book1");
+        libraryItemController.checkout("Book1");
         verify(mockOperationObserver).setOperationStatus(false);
     }
 
     @Test
     public void shouldBeTrueWhenReturnBookThatBelongsToLibraryAndNotAvailable() {
         book1.setAvailability(false);
-        library.checkin("Book1");
+        libraryItemController.checkin("Book1");
         verify(mockOperationObserver).setOperationStatus(true);
     }
 
     @Test
     public void shouldBeFalseWhenReturnBookThatNotBelongsToLibrary() {
-        library.checkin("Book-not-exists");
+        libraryItemController.checkin("Book-not-exists");
         verify(mockOperationObserver).setOperationStatus(false);
     }
 
     @Test
     public void shouldBeFalseWhenReturnBookThatAlreadyAvailableInLibrary() {
-        library.checkin("Book1");
+        libraryItemController.checkin("Book1");
         verify(mockOperationObserver).setOperationStatus(false);
     }
 
