@@ -35,7 +35,7 @@ public class AuthenticationController {
     }
 
     public void logout() {
-        if(this.currentUserLibraryNumber.isPresent()){
+        if (this.currentUserLibraryNumber.isPresent()) {
             operationObserver.setOperationStatus(true);
             this.currentUserLibraryNumber = Optional.empty();
             return;

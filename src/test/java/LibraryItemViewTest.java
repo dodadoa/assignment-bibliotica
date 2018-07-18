@@ -3,7 +3,6 @@ import Controller.LibraryItemController;
 import Model.LibraryItem.Book;
 import Model.LibraryItem.LibraryItem;
 import Model.LibraryItem.Movie;
-import Model.User.User;
 import Utils.IO;
 import View.LibraryItemView;
 import org.junit.jupiter.api.*;
@@ -18,12 +17,12 @@ import static org.mockito.Mockito.*;
 @DisplayName("Library Item View")
 public class LibraryItemViewTest {
 
+    IO mockIO;
     private LibraryItemView libraryItemView;
     private LibraryItemController bookController;
     private LibraryItemController movieController;
     private AuthenticationController mockAuthenticationController;
     private String libraryNumber;
-    IO mockIO;
 
     @BeforeEach
     public void beforeEach() {
