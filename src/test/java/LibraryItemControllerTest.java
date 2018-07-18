@@ -42,8 +42,8 @@ public class LibraryItemControllerTest {
         @DisplayName("get list of Available Item")
         @Test
         public void shouldGetListOfStringOfBookWhichIsAvailableWhenListingBooksFromLibrary() {
+            libraryItemController.checkout("Book2", user1);
             List<String> booksInformation = new ArrayList<>(Arrays.asList("Book1 | K. | 1994"));
-            book2.setAvailability(false);
             assertEquals(booksInformation, libraryItemController.list());
         }
     }
@@ -69,7 +69,8 @@ public class LibraryItemControllerTest {
         @DisplayName("When Item exists but not available -> set operation false")
         @Test
         public void shouldBeFalseWhenCheckoutBookThatNotAvailable() {
-            book1.setAvailability(false);
+            libraryItemController.checkout("Book1", user1);
+            reset(mockOperationObserver);
             libraryItemController.checkout("Book1", user1);
             verify(mockOperationObserver).setOperationStatus(false);
         }
@@ -90,9 +91,10 @@ public class LibraryItemControllerTest {
         @Test
         public void notTheSameUserReturnItem() {
             libraryItemController.checkout("Book1", user1);
-            verify(mockOperationObserver, times(1)).setOperationStatus(true);
+            reset(mockOperationObserver);
+
             libraryItemController.checkin("Book1", user2);
-            verify(mockOperationObserver, times(1)).setOperationStatus(false);
+            verify(mockOperationObserver).setOperationStatus(false);
         }
 
         @DisplayName("user return the already exist item -> set operation false (fail)")
@@ -107,9 +109,10 @@ public class LibraryItemControllerTest {
         public void returnItemUserNotCheckoutFor() {
             libraryItemController.checkout("Book1", user1);
             libraryItemController.checkout("Book2", user2);
+            reset(mockOperationObserver);
 
             libraryItemController.checkin("Book1", user2);
-            verify(mockOperationObserver, times(1)).setOperationStatus(false);
+            verify(mockOperationObserver).setOperationStatus(false);
         }
     }
 

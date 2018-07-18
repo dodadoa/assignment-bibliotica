@@ -3,40 +3,39 @@ package Controller;
 import Model.LibraryItem.LibraryItem;
 import Utils.OperationObserver;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LibraryItemController {
 
-    private List<LibraryItem> libraryItemList;
+    private List<LibraryItem> availableLibraryItemList;
+    private List<LibraryItem> checkoutItemList;
     private OperationObserver operationObserver;
     private Map<String, String> userAndLibraryItemRelationshipMap;
 
     public LibraryItemController(List<LibraryItem> initItemsList) {
-        this.libraryItemList = initItemsList;
+        this.availableLibraryItemList = initItemsList;
+        this.checkoutItemList = new ArrayList<>();
         this.userAndLibraryItemRelationshipMap = new HashMap<>();
     }
 
     public List<String> list() {
-        return this.libraryItemList.stream()
+        return this.availableLibraryItemList.stream()
                 .map(LibraryItem::getInformation)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     public void checkout(String itemNameInput, String currentUserLibraryNumber) {
-        Optional<LibraryItem> optionalItem = this.libraryItemList.stream()
-                .filter(item -> item.matchAvailable(itemNameInput))
+        Optional<LibraryItem> optionalItem = this.availableLibraryItemList.stream()
+                .filter(item -> item.matchName(itemNameInput))
                 .findFirst();
 
         if (optionalItem.isPresent()) {
             this.userAndLibraryItemRelationshipMap.put(itemNameInput, currentUserLibraryNumber);
 
-            optionalItem.get().setAvailability(false);
+            this.checkoutItemList.add(optionalItem.get());
+            this.availableLibraryItemList.remove(optionalItem.get());
+
             operationObserver.setOperationStatus(true);
         } else {
             operationObserver.setOperationStatus(false);
@@ -49,8 +48,8 @@ public class LibraryItemController {
             return;
         }
 
-        Optional<LibraryItem> optionalItem = this.libraryItemList.stream()
-                .filter(item -> item.matchNonAvailable(itemNameInput))
+        Optional<LibraryItem> optionalItem = this.checkoutItemList.stream()
+                .filter(item -> item.matchName(itemNameInput))
                 .findFirst();
 
         String userBelongedToItemNameInput = this.userAndLibraryItemRelationshipMap.get(itemNameInput);
@@ -58,7 +57,10 @@ public class LibraryItemController {
 
         if (optionalItem.isPresent() && isUserTheSameAsCurrentUser) {
             this.userAndLibraryItemRelationshipMap.remove(itemNameInput);
-            optionalItem.get().setAvailability(true);
+
+            this.checkoutItemList.remove(optionalItem.get());
+            this.availableLibraryItemList.add(optionalItem.get());
+
             operationObserver.setOperationStatus(true);
         } else {
             operationObserver.setOperationStatus(false);

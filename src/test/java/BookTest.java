@@ -1,10 +1,10 @@
 import Model.LibraryItem.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,43 +18,30 @@ public class BookTest {
         book = new Book("Book1", "K.", 1994);
     }
 
+    @Nested
+    @DisplayName("Match Name")
+    class MatchNameTest {
+        @Test
+        @DisplayName("when input = Book1 -> true")
+        public void successMatchName() {
+            assertTrue(book.matchName("Book1"));
+        }
 
-    @Test
-    public void shouldNotGetBookInformationThatHaveAlreadyCheckout() {
-        book.setAvailability(false);
-        Optional<String> optionalBook = book.getInformation();
-        assertFalse(optionalBook.isPresent());
+        @Test
+        @DisplayName("when input = BookWhat? -> false")
+        public void failMatchName() {
+            assertFalse(book.matchName("BookWhat?"));
+        }
     }
 
-    @Test
-    public void shouldReturnTrueWhenCheckTheExistBookAndAvailable() {
-        assertTrue(book.matchAvailable("Book1"));
+    @Nested
+    @DisplayName("Get information test")
+    class GetInformationTest {
+        @Test
+        @DisplayName("when input = Book1 -> true")
+        public void successMatchName() {
+            assertEquals("Book1 | K. | 1994",book.getInformation());
+        }
     }
 
-    @Test
-    public void shouldReturnFalseWhenCheckTheBookIsNotAvailable() {
-        book.setAvailability(false);
-        assertFalse(book.matchAvailable("Book1"));
-    }
-
-    @Test
-    public void shouldReturnFalseWhenCheckTheBookFromNameThatIsNotEqual() {
-        assertFalse(book.matchAvailable("noNameBook"));
-    }
-
-    @Test
-    public void shouldReturnTrueWhenReturnTheBookThatBelongToLibraryAndNotAvailable() {
-        book.setAvailability(false);
-        assertTrue(book.matchNonAvailable("Book1"));
-    }
-
-    @Test
-    public void shouldReturnFalseWhenReturnTheBookThatNotBelongToLibrary() {
-        assertFalse(book.matchNonAvailable("noNameBook"));
-    }
-
-    @Test
-    public void shouldReturnFalseWhenReturnTheBookThatAlreadyAvailableInLibrary() {
-        assertFalse(book.matchNonAvailable("Book1"));
-    }
 }
