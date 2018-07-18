@@ -48,10 +48,10 @@ public class App {
         LibraryItemController movieController = new LibraryItemController(initMoviesList);
         AuthenticationController authenticationController = new AuthenticationController(initUsersList);
 
-        LibraryItemView libraryItemView = new LibraryItemView(io, bookController, movieController);
+        LibraryItemView libraryItemView = new LibraryItemView(io, bookController, movieController, authenticationController);
         AuthenticationView authenticationView = new AuthenticationView(io, authenticationController);
 
-        this.menu = new Menu(this, this.io, libraryItemView, authenticationView);
+        this.menu = new Menu(this, this.io, libraryItemView, authenticationView, authenticationController);
     }
 
     public void run() {

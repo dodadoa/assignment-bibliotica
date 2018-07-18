@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 @DisplayName("Authentication Controller")
 public class AuthenticationControllerTest {
@@ -34,24 +36,65 @@ public class AuthenticationControllerTest {
     @DisplayName("Login")
     class LoginTest {
         @Test
-        @DisplayName("Should return true when user input correctly with library number '111-1111' and password 'dodadoa'")
+        @DisplayName("Should set operation status = true, and isAuth is true when input is correct")
         public void loginSuccessTest() {
             authenticationController.login("111-1111", "dodadoa");
             verify(mockOperationObserver).setOperationStatus(true);
+            assertTrue(authenticationController.isAuth());
         }
 
         @Test
-        @DisplayName("Should return False when user input library number which is not exist")
+        @DisplayName("Should set operation status = False and isAuth is false when user input library number which is not exist")
         public void loginFailWithWrongUserTest() {
             authenticationController.login("000-1111", "dodadoa");
             verify(mockOperationObserver).setOperationStatus(false);
+            assertFalse(authenticationController.isAuth());
         }
 
         @Test
-        @DisplayName("Should return False when user input 111-1111 but wrong password '0'")
+        @DisplayName("Should set operation status = False, and isAuth is false when user input 111-1111 but wrong password '0'")
         public void loginFailWithWrongPasswordTest() {
             authenticationController.login("111-1111", "0");
             verify(mockOperationObserver).setOperationStatus(false);
+
+        }
+    }
+
+    @Nested
+    @DisplayName("Logout")
+    class LogoutTest {
+
+        @BeforeEach
+        public void loginBeforeEachLogout() {
+            authenticationController.login("111-1111", "dodadoa");
+            reset(mockOperationObserver);
+        }
+
+        @Test
+        @DisplayName("Should set operation = True and isAuth is false when logout success")
+        public void logoutSuccess() {
+            authenticationController.logout();
+            verify(mockOperationObserver).setOperationStatus(true);
+            assertFalse(authenticationController.isAuth());
+        }
+    }
+
+    @Nested
+    @DisplayName("Get User Information")
+    class GetUserInformationTest {
+
+        @DisplayName("should get user information for authorized user")
+        @Test
+        public void getUserInformationSuccessfully() {
+            authenticationController.login("111-1111", "dodadoa");
+            String userInformation = "K., k@mail.com, 0801112222";
+            assertEquals(userInformation, authenticationController.getUserInformation().get());
+        }
+
+        @DisplayName("should get empty for unauthorized user")
+        @Test
+        public void getEmpty() {
+            assertFalse(authenticationController.getUserInformation().isPresent());
         }
     }
 }

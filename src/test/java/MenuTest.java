@@ -1,3 +1,4 @@
+import Controller.AuthenticationController;
 import Utils.IO;
 import View.AuthenticationView;
 import View.LibraryItemView;
@@ -14,6 +15,7 @@ public class MenuTest {
     private App mockApp;
     private LibraryItemView mockLibraryItemView;
     private AuthenticationView mockAuthenticationView;
+    private AuthenticationController mockAuthenticationController;
     private IO mockIO;
     private Menu menu;
     private Menu spyMenu;
@@ -24,7 +26,8 @@ public class MenuTest {
         mockIO = mock(IO.class);
         mockLibraryItemView = mock(LibraryItemView.class);
         mockAuthenticationView = mock(AuthenticationView.class);
-        menu = new Menu(mockApp, mockIO, mockLibraryItemView, mockAuthenticationView);
+        mockAuthenticationController = mock(AuthenticationController.class);
+        menu = new Menu(mockApp, mockIO, mockLibraryItemView, mockAuthenticationView, mockAuthenticationController);
         spyMenu = spy(menu);
     }
 
@@ -36,7 +39,7 @@ public class MenuTest {
         @Test
         public void testAuthorizedMenu() {
             when(mockIO.input()).thenReturn("");
-            when(mockAuthenticationView.isAuth()).thenReturn(true);
+            when(mockAuthenticationController.isAuth()).thenReturn(true);
             spyMenu.start();
             verify(spyMenu).authorizedMenu();
         }
@@ -45,9 +48,67 @@ public class MenuTest {
         @Test
         public void testUnauthorizedMenu() {
             when(mockIO.input()).thenReturn("");
-            when(mockAuthenticationView.isAuth()).thenReturn(false);
+            when(mockAuthenticationController.isAuth()).thenReturn(false);
             spyMenu.start();
             verify(spyMenu).unauthorizedMenu();
+        }
+    }
+
+    @Nested
+    @DisplayName("Authorized Menu")
+    class AuthorizedMenu {
+
+        @DisplayName("input = list -> go to library view list")
+        @Test
+        public void libraryViewWork() {
+            when(mockIO.input()).thenReturn("list");
+            menu.authorizedMenu();
+            verify(mockLibraryItemView).listBranch();
+        }
+
+        @DisplayName("input = info -> go to authentication show user information")
+        @Test
+        public void authenticationViewWork() {
+            when(mockIO.input()).thenReturn("info");
+            menu.authorizedMenu();
+            verify(mockAuthenticationView).showInformation();
+        }
+
+        @DisplayName("wrong input display 'Select a valid option!'")
+        @Test
+        public void wrongInput() {
+            when(mockIO.input()).thenReturn("wrongdoing");
+            menu.authorizedMenu();
+            verify(mockIO).display("Select a valid option!");
+        }
+    }
+
+    @Nested
+    @DisplayName("Unauthorized Menu")
+    class UnauthorizedMenu {
+
+        @DisplayName("input = list -> go to library view list")
+        @Test
+        public void libraryViewWork() {
+            when(mockIO.input()).thenReturn("list");
+            menu.unauthorizedMenu();
+            verify(mockLibraryItemView).listBranch();
+        }
+
+        @DisplayName("input = login -> go to authentication view login")
+        @Test
+        public void authenticationViewWork() {
+            when(mockIO.input()).thenReturn("login");
+            menu.unauthorizedMenu();
+            verify(mockAuthenticationView).login();
+        }
+
+        @DisplayName("wrong input display 'Select a valid option!'")
+        @Test
+        public void wrongInput() {
+            when(mockIO.input()).thenReturn("wrongdoing");
+            menu.unauthorizedMenu();
+            verify(mockIO).display("Select a valid option!");
         }
     }
 }

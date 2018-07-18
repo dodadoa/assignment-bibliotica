@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AuthenticationViewTest {
@@ -39,9 +36,8 @@ public class AuthenticationViewTest {
         @Test
         public void loginWithCorrectLibraryNumberAndPassword() {
             when(mockIO.input()).thenReturn("111-1111").thenReturn("dodadoa");
-            Consumer mockConsumer = mock(Consumer.class);
-            authenticationView.login(mockConsumer);
-            verify(mockIO).display("login success!");
+            authenticationView.login();
+            verify(mockIO).display("login successfully!");
             verify(mockIO, never()).display("login fail!");
         }
 
@@ -49,28 +45,9 @@ public class AuthenticationViewTest {
         @Test
         public void loginWithWrongLibraryNumberAndPassword() {
             when(mockIO.input()).thenReturn("111-0000").thenReturn("dodadoa");
-            Consumer mockConsumer = mock(Consumer.class);
-            authenticationView.login(mockConsumer);
+            authenticationView.login();
             verify(mockIO).display("login fail!");
-            verify(mockIO, never()).display("login success!");
-        }
-
-        @DisplayName("login with correct library number and password will invoke afterLoginSuccess with current library number")
-        @Test
-        public void loginWithCorrectLibraryNumberAndPasswordWillInvokeAfterLoginSuccessConsumer() {
-            when(mockIO.input()).thenReturn("111-1111").thenReturn("dodadoa");
-            Consumer mockConsumer = mock(Consumer.class);
-            authenticationView.login(mockConsumer);
-            verify(mockConsumer).accept("111-1111");
-        }
-
-        @DisplayName("isAuth is true when login successfully")
-        @Test
-        public void logoutChangeIsAuthStatus() {
-            when(mockIO.input()).thenReturn("111-1111").thenReturn("dodadoa");
-            Consumer mockConsumer = mock(Consumer.class);
-            authenticationView.login(mockConsumer);
-            assertTrue(authenticationView.isAuth());
+            verify(mockIO, never()).display("login successfully!");
         }
     }
 
@@ -82,20 +59,37 @@ public class AuthenticationViewTest {
         @Test
         public void logoutFromLogin() {
             when(mockIO.input()).thenReturn("111-1111").thenReturn("dodadoa");
-            Consumer mockConsumer = mock(Consumer.class);
-            authenticationView.login(mockConsumer);
+            authenticationView.login();
+
+            verify(mockIO).display("login successfully!");
+            reset(mockIO);
+
             authenticationView.logout();
             verify(mockIO).display("logout successfully!");
         }
 
-        @DisplayName("isAuth is false when logout after login")
+        @DisplayName("logout fail display fail message")
         @Test
-        public void logoutChangeIsAuthStatus() {
-            when(mockIO.input()).thenReturn("111-1111").thenReturn("dodadoa");
-            Consumer mockConsumer = mock(Consumer.class);
-            authenticationView.login(mockConsumer);
+        public void logoutFail() {
             authenticationView.logout();
-            assertFalse(authenticationView.isAuth());
+            verify(mockIO).display("logout fail!");
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Show information")
+    class ShowInformationTest {
+
+        @DisplayName("show information for current user")
+        @Test
+        public void showInformationForCurrentUser() {
+            when(mockIO.input()).thenReturn("111-1111").thenReturn("dodadoa");
+            authenticationView.login();
+            reset(mockIO);
+
+            authenticationView.showInformation();
+            verify(mockIO).display("K., k@mail.com, 0801112222");
         }
     }
 

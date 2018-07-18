@@ -1,7 +1,9 @@
+import Controller.AuthenticationController;
 import Controller.LibraryItemController;
 import Model.LibraryItem.Book;
 import Model.LibraryItem.LibraryItem;
 import Model.LibraryItem.Movie;
+import Model.User.User;
 import Utils.IO;
 import View.LibraryItemView;
 import org.junit.jupiter.api.*;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -18,6 +21,7 @@ public class LibraryItemViewTest {
     private LibraryItemView libraryItemView;
     private LibraryItemController bookController;
     private LibraryItemController movieController;
+    private AuthenticationController mockAuthenticationController;
     private String libraryNumber;
     IO mockIO;
 
@@ -34,10 +38,11 @@ public class LibraryItemViewTest {
 
         bookController = new LibraryItemController(initBooksList);
         movieController = new LibraryItemController(initMoviesList);
+        mockAuthenticationController = mock(AuthenticationController.class);
 
         libraryNumber = "111-1111";
 
-        libraryItemView = new LibraryItemView(mockIO, bookController, movieController);
+        libraryItemView = new LibraryItemView(mockIO, bookController, movieController, mockAuthenticationController);
     }
 
     @AfterEach
@@ -74,11 +79,17 @@ public class LibraryItemViewTest {
     @DisplayName("Checkout Branch")
     class CheckoutBranchTest {
 
+        @BeforeEach
+        public void setupAuthenticationController() {
+            Optional<String> libraryNumber = Optional.of("111-1111");
+            when(mockAuthenticationController.getCurrentUserLibraryNumber()).thenReturn(libraryNumber);
+        }
+
         @DisplayName("should display successful message when checkout available Book")
         @Test
         public void checkoutSuccessfullyWhenCheckoutAvailableBook() {
             when(mockIO.input()).thenReturn("book").thenReturn("Book1");
-            libraryItemView.checkoutBranch(libraryNumber);
+            libraryItemView.checkoutBranch();
             verify(mockIO).display("Thank you! Enjoy the book");
         }
 
@@ -86,7 +97,7 @@ public class LibraryItemViewTest {
         @Test
         public void checkoutSuccessfullyWhenCheckoutAvaialbleMovie() {
             when(mockIO.input()).thenReturn("movie").thenReturn("Movie1");
-            libraryItemView.checkoutBranch(libraryNumber);
+            libraryItemView.checkoutBranch();
             verify(mockIO).display("Thank you! Enjoy the movie");
         }
 
@@ -94,7 +105,7 @@ public class LibraryItemViewTest {
         @Test
         public void checkoutFailWhenCheckoutInvalidBook() {
             when(mockIO.input()).thenReturn("book").thenReturn("invalid Book");
-            libraryItemView.checkoutBranch(libraryNumber);
+            libraryItemView.checkoutBranch();
             verify(mockIO).display("That book is not available.");
         }
 
@@ -102,43 +113,64 @@ public class LibraryItemViewTest {
         @Test
         public void checkoutFailWhenCheckoutNotAvailableBook() {
             when(mockIO.input()).thenReturn("book").thenReturn("Book1");
-            libraryItemView.checkoutBranch(libraryNumber);
-            verify(mockIO, times(1)).display("Thank you! Enjoy the book");
-
+            libraryItemView.checkoutBranch();
             reset(mockIO);
 
             when(mockIO.input()).thenReturn("book").thenReturn("Book1");
-            libraryItemView.checkoutBranch(libraryNumber);
+            libraryItemView.checkoutBranch();
             verify(mockIO, times(1)).display("That book is not available.");
+        }
+
+        @DisplayName("should display fail message when there is no current user")
+        @Test
+        public void displayFailMsgWhenThereIsNoCurrentUser() {
+            reset(mockAuthenticationController);
+            when(mockAuthenticationController.getCurrentUserLibraryNumber()).thenReturn(Optional.empty());
+
+            when(mockIO.input()).thenReturn("book").thenReturn("Book1");
+
+            libraryItemView.checkoutBranch();
+            verify(mockIO).display("That book is not available.");
         }
     }
 
     @Nested
     @DisplayName("Checkin Branch")
     class CheckinBranchTest {
+
         @DisplayName("should display successful message when return Book from the same user")
         @Test
         public void returnSuccessfullyWhenCheckinBookFromTheSameUser() {
+            Optional<String> libraryNumber = Optional.of("111-1111");
+            when(mockAuthenticationController.getCurrentUserLibraryNumber()).thenReturn(libraryNumber);
             when(mockIO.input()).thenReturn("book").thenReturn("Book1");
-            libraryItemView.checkoutBranch(libraryNumber);
 
+            libraryItemView.checkoutBranch();
             reset(mockIO);
 
             when(mockIO.input()).thenReturn("book").thenReturn("Book1");
-            libraryItemView.checkinBranch(libraryNumber);
+            when(mockAuthenticationController.getCurrentUserLibraryNumber()).thenReturn(libraryNumber);
+
+            libraryItemView.checkinBranch();
             verify(mockIO).display("Thank you for returning the book.");
         }
 
         @DisplayName("should display fail message when return Book from the different user")
         @Test
         public void returnSuccessfullyWhenCheckinBookFromTheDifferentUser() {
+            Optional<String> libraryNumber = Optional.of("111-1111");
+            when(mockAuthenticationController.getCurrentUserLibraryNumber()).thenReturn(libraryNumber);
+
             when(mockIO.input()).thenReturn("book").thenReturn("Book1");
-            libraryItemView.checkoutBranch("111-1111");
+            libraryItemView.checkoutBranch();
 
             reset(mockIO);
 
+            Optional<String> anotherLibraryNumber = Optional.of("000-0000");
+            when(mockAuthenticationController.getCurrentUserLibraryNumber()).thenReturn(anotherLibraryNumber);
+
             when(mockIO.input()).thenReturn("book").thenReturn("Book1");
-            libraryItemView.checkinBranch("000-0000");
+            libraryItemView.checkinBranch();
             verify(mockIO).display("That is not a valid book to return.");
         }
     }

@@ -1,9 +1,9 @@
+import Controller.AuthenticationController;
 import Utils.IO;
 import View.AuthenticationView;
 import View.LibraryItemView;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class Menu {
 
@@ -11,13 +11,14 @@ public class Menu {
     private IO io;
     private LibraryItemView libraryItemView;
     private AuthenticationView authenticationView;
-    private String currentUserLibraryNumber;
+    private AuthenticationController authenticationController;
 
-    public Menu(App app, IO io, LibraryItemView libraryItemView, AuthenticationView authenticationView) {
+    public Menu(App app, IO io, LibraryItemView libraryItemView, AuthenticationView authenticationView, AuthenticationController authenticationController) {
         this.app = app;
         this.io = io;
         this.libraryItemView = libraryItemView;
         this.authenticationView = authenticationView;
+        this.authenticationController = authenticationController;
     }
 
     public void authorizedMenu() {
@@ -37,10 +38,10 @@ public class Menu {
                     this.libraryItemView.listBranch();
                     break;
                 case CHECKOUT:
-                    this.libraryItemView.checkoutBranch(this.currentUserLibraryNumber);
+                    this.libraryItemView.checkoutBranch();
                     break;
                 case RETURN:
-                    this.libraryItemView.checkinBranch(this.currentUserLibraryNumber);
+                    this.libraryItemView.checkinBranch();
                     break;
                 case USER_INFORMATION:
                     this.authenticationView.showInformation();
@@ -74,8 +75,7 @@ public class Menu {
                     this.libraryItemView.listBranch();
                     break;
                 case LOGIN:
-                    Consumer<String> afterLoginSuccess = (currentUserLibraryNumber) -> this.currentUserLibraryNumber = currentUserLibraryNumber;
-                    this.authenticationView.login(afterLoginSuccess);
+                    this.authenticationView.login();
                     break;
                 case QUIT:
                     app.quit();
@@ -91,7 +91,7 @@ public class Menu {
 
     public void start() {
         io.display("Menu:");
-        if (this.authenticationView.isAuth()) {
+        if (this.authenticationController.isAuth()) {
             this.authorizedMenu();
         } else {
             this.unauthorizedMenu();

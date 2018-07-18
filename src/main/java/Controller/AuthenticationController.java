@@ -10,9 +10,11 @@ public class AuthenticationController {
 
     private List<User> userList;
     private OperationObserver operationObserver;
+    private Optional<String> currentUserLibraryNumber;
 
     public AuthenticationController(List<User> usersList) {
         this.userList = usersList;
+        this.currentUserLibraryNumber = Optional.empty();
     }
 
     public void addOperationObserver(OperationObserver app) {
@@ -23,12 +25,35 @@ public class AuthenticationController {
         boolean isMatch = userList.stream()
                 .anyMatch(user -> user.matchUser(libraryNumber, password));
         operationObserver.setOperationStatus(isMatch);
+        if (isMatch) {
+            this.currentUserLibraryNumber = Optional.of(libraryNumber);
+        }
     }
 
-    public Optional<String> getUserInformationByLibraryNumber(String libraryNumber) {
-        return this.userList.stream()
-                .filter(user -> user.matchLibraryNumber(libraryNumber))
-                .map(User::getUserInformation)
-                .findFirst();
+    public Optional<String> getCurrentUserLibraryNumber() {
+        return this.currentUserLibraryNumber;
+    }
+
+    public void logout() {
+        if(this.currentUserLibraryNumber.isPresent()){
+            operationObserver.setOperationStatus(true);
+            this.currentUserLibraryNumber = Optional.empty();
+            return;
+        }
+        operationObserver.setOperationStatus(false);
+    }
+
+    public boolean isAuth() {
+        return this.currentUserLibraryNumber.isPresent();
+    }
+
+    public Optional<String> getUserInformation() {
+        if (this.currentUserLibraryNumber.isPresent()) {
+            return this.userList.stream()
+                    .filter(user -> user.matchLibraryNumber(this.currentUserLibraryNumber.get()))
+                    .map(User::getUserInformation)
+                    .findFirst();
+        }
+        return Optional.empty();
     }
 }
