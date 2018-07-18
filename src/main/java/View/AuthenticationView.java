@@ -16,7 +16,7 @@ public class AuthenticationView {
         this.io = io;
         this.authenticationController = authenticationController;
         this.authenticationController.addOperationObserver(operationObserver);
-        currentUserLibraryNumber = Optional.empty();
+        this.currentUserLibraryNumber = Optional.empty();
     }
 
     public boolean isAuth() {
