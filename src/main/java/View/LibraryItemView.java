@@ -65,7 +65,7 @@ public class LibraryItemView {
                     io.display("please type the name of the movie you want to checkout:");
                     String movieNameInput = io.input();
                     movieController.checkout(movieNameInput, currentUserLibraryNumber);
-                    io.display(this.operationObserver.isSuccess() ? "Thank you! Enjoy the movie" : "That book is not available.");
+                    io.display(this.operationObserver.isSuccess() ? "Thank you! Enjoy the movie" : "That movie is not available.");
                     break;
             }
         } else {

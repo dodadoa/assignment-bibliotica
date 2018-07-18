@@ -11,15 +11,11 @@ import View.LibraryItemView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 public class App {
     private IO io;
     private boolean isRunning;
-    private LibraryItemView libraryItemView;
-    private AuthenticationView authenticationView;
-    private String currentUserLibraryNumber;
+    private Menu menu;
 
     public App(IO io) {
         this.io = io;
@@ -52,93 +48,17 @@ public class App {
         LibraryItemController movieController = new LibraryItemController(initMoviesList);
         AuthenticationController authenticationController = new AuthenticationController(initUsersList);
 
-        libraryItemView = new LibraryItemView(io, bookController, movieController);
-        authenticationView = new AuthenticationView(io, authenticationController);
-    }
+        LibraryItemView libraryItemView = new LibraryItemView(io, bookController, movieController);
+        AuthenticationView authenticationView = new AuthenticationView(io, authenticationController);
 
-    private void authorizedMenu() {
-        io.display("List -> type list and enter");
-        io.display("Quit app -> type quit and enter");
-        io.display("Checkout Item -> type checkout and enter");
-        io.display("Return Item -> type return and enter");
-        io.display("Get your information -> type info and enter");
-        io.display("Logout -> type logout and enter");
-
-        String input = io.input();
-        Optional<MenuOption> option = MenuOption.getEnumByString(input);
-
-        if (option.isPresent()) {
-            switch (option.get()) {
-                case LIST:
-                    this.libraryItemView.listBranch();
-                    break;
-                case CHECKOUT:
-                    this.libraryItemView.checkoutBranch(this.currentUserLibraryNumber);
-                    break;
-                case RETURN:
-                    this.libraryItemView.checkinBranch(this.currentUserLibraryNumber);
-                    break;
-                case USER_INFORMATION:
-                    this.authenticationView.showInformation();
-                    break;
-                case LOGOUT:
-                    this.authenticationView.logout();
-                    break;
-                case QUIT:
-                    this.quit();
-                    break;
-                default:
-                    io.display("Select a valid option!");
-                    break;
-            }
-        } else {
-            io.display("Select a valid option!");
-        }
-    }
-
-    private void unauthorizedMenu() {
-        io.display("List -> type list and enter");
-        io.display("Quit app -> type quit and enter");
-        io.display("Login -> type login and enter");
-
-        String input = io.input();
-        Optional<MenuOption> option = MenuOption.getEnumByString(input);
-
-        if (option.isPresent()) {
-            switch (option.get()) {
-                case LIST:
-                    this.libraryItemView.listBranch();
-                    break;
-                case LOGIN:
-                    Consumer<String> afterLoginSuccess = (currentUserLibraryNumber) -> this.currentUserLibraryNumber = currentUserLibraryNumber;
-                    this.authenticationView.login(afterLoginSuccess);
-                    break;
-                case QUIT:
-                    this.quit();
-                    break;
-                default:
-                    io.display("Select a valid option!");
-                    break;
-            }
-        } else {
-            io.display("Select a valid option!");
-        }
-    }
-
-    public void menu() {
-        io.display("Menu:");
-        if (this.authenticationView.isAuth()) {
-            this.authorizedMenu();
-        } else {
-            this.unauthorizedMenu();
-        }
+        this.menu = new Menu(this, this.io, libraryItemView, authenticationView);
     }
 
     public void run() {
         init();
         greeting();
         while (this.isRunning) {
-            menu();
+            this.menu.start();
         }
     }
 
