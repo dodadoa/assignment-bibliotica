@@ -74,6 +74,14 @@ public class MenuTest {
             verify(mockAuthenticationView).showInformation();
         }
 
+        @DisplayName("input = quit -> app quit")
+        @Test
+        public void quitApp() {
+            when(mockIO.input()).thenReturn("quit");
+            menu.unauthorizedMenu();
+            verify(mockApp).quit();
+        }
+
         @DisplayName("wrong input display 'Select a valid option!'")
         @Test
         public void wrongInput() {
@@ -101,6 +109,14 @@ public class MenuTest {
             when(mockIO.input()).thenReturn("login");
             menu.unauthorizedMenu();
             verify(mockAuthenticationView).login();
+        }
+
+        @DisplayName("input = quit -> app quit")
+        @Test
+        public void quitApp() {
+            when(mockIO.input()).thenReturn("quit");
+            menu.unauthorizedMenu();
+            verify(mockApp).quit();
         }
 
         @DisplayName("wrong input display 'Select a valid option!'")
