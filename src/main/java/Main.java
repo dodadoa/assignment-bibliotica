@@ -1,6 +1,9 @@
+import Utils.IO;
+
 public class Main {
     public static void main(String[] args) {
-        App app = new App();
+        IO io = new IO();
+        App app = new App(io);
         app.run();
     }
 }

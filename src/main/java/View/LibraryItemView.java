@@ -45,7 +45,7 @@ public class LibraryItemView {
         }
     }
 
-    public void checkoutBranch() {
+    public void checkoutBranch(String currentUserLibraryNumber) {
         io.display("Checkout menu:");
         io.display("Checkout Book -> type book and enter");
         io.display("Checkout Movie -> type movie and enter");
@@ -58,13 +58,13 @@ public class LibraryItemView {
                 case BOOK:
                     io.display("please type the name of the book you want to checkout:");
                     String bookNameInput = io.input();
-                    bookController.checkout(bookNameInput);
+                    bookController.checkout(bookNameInput, currentUserLibraryNumber);
                     io.display(this.operationObserver.isSuccess() ? "Thank you! Enjoy the book" : "That book is not available.");
                     break;
                 case MOVIE:
                     io.display("please type the name of the movie you want to checkout:");
                     String movieNameInput = io.input();
-                    movieController.checkout(movieNameInput);
+                    movieController.checkout(movieNameInput, currentUserLibraryNumber);
                     io.display(this.operationObserver.isSuccess() ? "Thank you! Enjoy the movie" : "That book is not available.");
                     break;
             }
@@ -73,7 +73,7 @@ public class LibraryItemView {
         }
     }
 
-    public void checkinBranch() {
+    public void checkinBranch(String currentUserLibraryNumber) {
         io.display("Return menu:");
         io.display("Return Book -> type book and enter");
         io.display("Return Movie -> type movie and enter");
@@ -86,13 +86,13 @@ public class LibraryItemView {
                 case BOOK:
                     io.display("please type the name of the book you want to return:");
                     String bookNameInput = io.input();
-                    bookController.checkin(bookNameInput);
+                    bookController.checkin(bookNameInput, currentUserLibraryNumber);
                     io.display(this.operationObserver.isSuccess() ? "Thank you for returning the book." : "That is not a valid book to return.");
                     break;
                 case MOVIE:
                     io.display("please type the name of the movie you want to return:");
                     String movieNameInput = io.input();
-                    movieController.checkin(movieNameInput);
+                    movieController.checkin(movieNameInput, currentUserLibraryNumber);
                     io.display(this.operationObserver.isSuccess() ? "Thank you for returning the movie." : "That is not a valid movie to return.");
                     break;
             }

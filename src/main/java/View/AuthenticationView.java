@@ -5,6 +5,7 @@ import Utils.IO;
 import Utils.OperationObserver;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class AuthenticationView {
     private final IO io;
@@ -23,7 +24,7 @@ public class AuthenticationView {
         return this.currentUserLibraryNumber.isPresent();
     }
 
-    public void login() {
+    public void login(Consumer<String> afterLoginSuccess) {
         io.display("Please login");
 
         io.display("library number:");
@@ -36,7 +37,7 @@ public class AuthenticationView {
 
         if (operationObserver.isSuccess()) {
             this.currentUserLibraryNumber = Optional.of(libraryNumber);
-
+            afterLoginSuccess.accept(this.currentUserLibraryNumber.get());
             io.display("login success!");
             return;
         }

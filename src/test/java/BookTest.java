@@ -17,6 +17,7 @@ public class BookTest {
         book = new Book("Book1", "K.", 1994);
     }
 
+
     @Test
     public void shouldNotGetBookInformationThatHaveAlreadyCheckout() {
         book.setAvailability(false);

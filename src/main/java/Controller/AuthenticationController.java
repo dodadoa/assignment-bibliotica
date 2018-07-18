@@ -11,12 +11,12 @@ public class AuthenticationController {
     private List<User> userList;
     private OperationObserver operationObserver;
 
-    public void addOperationObserver(OperationObserver app) {
-        this.operationObserver = app;
-    }
-
     public AuthenticationController(List<User> usersList) {
         this.userList = usersList;
+    }
+
+    public void addOperationObserver(OperationObserver app) {
+        this.operationObserver = app;
     }
 
     public void login(String libraryNumber, String password) {

@@ -12,15 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class App {
     private IO io;
     private boolean isRunning;
     private LibraryItemView libraryItemView;
     private AuthenticationView authenticationView;
+    private String currentUserLibraryNumber;
 
-    public App() {
-        this.io = new IO();
+    public App(IO io) {
+        this.io = io;
         this.isRunning = true;
     }
 
@@ -71,10 +73,10 @@ public class App {
                     this.libraryItemView.listBranch();
                     break;
                 case CHECKOUT:
-                    this.libraryItemView.checkoutBranch();
+                    this.libraryItemView.checkoutBranch(this.currentUserLibraryNumber);
                     break;
                 case RETURN:
-                    this.libraryItemView.checkinBranch();
+                    this.libraryItemView.checkinBranch(this.currentUserLibraryNumber);
                     break;
                 case USER_INFORMATION:
                     this.authenticationView.showInformation();
@@ -108,7 +110,8 @@ public class App {
                     this.libraryItemView.listBranch();
                     break;
                 case LOGIN:
-                    this.authenticationView.login();
+                    Consumer<String> afterLoginSuccess = (currentUserLibraryNumber) -> this.currentUserLibraryNumber = currentUserLibraryNumber;
+                    this.authenticationView.login(afterLoginSuccess);
                     break;
                 case QUIT:
                     this.quit();
